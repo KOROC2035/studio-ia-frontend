@@ -6,8 +6,18 @@ import {
   Facebook, Instagram, MessageCircle, Star, Zap, ShieldCheck, User as UserIcon,
   Crown, Coins, Smartphone
 } from 'lucide-react';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
+  // ==========================================
+  // 🚪 LA PORTE DÉROBÉE DU CEO
+  // ==========================================
+  // Si l'URL contient exactement ce chemin, on bloque l'app normale et on affiche le Dashboard
+  if (window.location.pathname === '/admin-secret-ceo') {
+    return <AdminDashboard />;
+  }
+
+  // --- LE RESTE DE TON APPLICATION ---
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
