@@ -18,11 +18,20 @@ function App() {
   }
 
   // --- LE RESTE DE TON APPLICATION ---
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // 1. On vérifie la mémoire du navigateur au démarrage
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem('dtca_theme') === 'dark';
+  });
 
+  // 2. À chaque changement, on met à jour le site ET la mémoire
   useEffect(() => {
-    if (isDarkMode) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('dtca_theme', 'dark'); // On sauvegarde "sombre"
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('dtca_theme', 'light'); // On sauvegarde "clair"
+    }
   }, [isDarkMode]);
 
   // --- SYSTÈME D'AUTHENTIFICATION & PROFIL ---
