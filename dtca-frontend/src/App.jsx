@@ -344,7 +344,7 @@ function App() {
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-blue-600 dark:text-blue-400 flex items-center justify-center gap-2 mb-1 md:mb-2">
               <Sparkles className="w-6 h-6 md:w-8 md:h-8" /> Studio Créatif IA
             </h1>
-            <p className="text-xs sm:text-sm md:text-base text-slate-500">Votre assistant marketing en Côte d'Ivoire</p>
+            <p className="text-xs sm:text-sm md:text-base text-slate-500">Votre assistant marketing IA</p>
           </div>
           
           <div className="flex justify-center flex-wrap gap-2 md:gap-4 relative z-0">
