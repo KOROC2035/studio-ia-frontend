@@ -502,7 +502,9 @@ function App() {
                   <div className="mb-5 md:mb-6"><h3 className="text-lg md:text-xl font-bold text-slate-800 dark:text-white mb-1.5 md:mb-2">Starter</h3><div className="flex items-baseline gap-2"><span className="text-3xl md:text-4xl font-extrabold">0</span><span className="text-sm md:text-base text-slate-500 font-medium">FCFA</span></div><p className="text-xs md:text-sm text-slate-500 mt-2">Pour tester la magie de l'IA.</p></div>
                   <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8 flex-1">
                     <li className="flex items-center gap-2 md:gap-3 text-sm"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-500 flex-shrink-0" /> <span><b>3 crédits</b> offerts</span></li>
-                    <li className="flex items-center gap-2 md:gap-3 text-sm"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-500 flex-shrink-0" /> <span>Qualité Standard</span></li>
+                    <li className="flex items-center gap-2 md:gap-3 text-sm"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-500 flex-shrink-0" /> <span>Copywriting basique</span></li>
+                    <li className="flex items-center gap-2 md:gap-3 text-sm"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-500 flex-shrink-0" /> <span>Textes FB, Insta & WhatsApp</span></li>
+                    <li className="flex items-center gap-2 md:gap-3 text-sm"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-green-500 flex-shrink-0" /> <span>Support WhatsApp</span></li>
                   </ul>
                   <button className="w-full bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-white font-bold py-2.5 md:py-3 rounded-xl transition text-sm md:text-base hover:bg-slate-200 dark:hover:bg-slate-600">Forfait Actuel</button>
                 </div>
@@ -513,7 +515,9 @@ function App() {
                   <div className="mb-5 md:mb-6"><h3 className="text-lg md:text-xl font-bold text-blue-600 dark:text-blue-400 mb-1.5 md:mb-2">Pro</h3><div className="flex items-baseline gap-2"><span className="text-3xl md:text-4xl font-extrabold">2 000</span><span className="text-sm md:text-base text-slate-500 font-medium">FCFA / mois</span></div><p className="text-xs md:text-sm text-slate-500 mt-2">Idéal pour les petits e-commerçants.</p></div>
                   <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8 flex-1">
                     <li className="flex items-center gap-2 md:gap-3 text-sm"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-blue-500 flex-shrink-0" /> <span><b>30 crédits</b> mensuels</span></li>
+                    <li className="flex items-center gap-2 md:gap-3 text-sm"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-blue-500 flex-shrink-0" /> <span>Copywriting avancé</span></li>
                     <li className="flex items-center gap-2 md:gap-3 text-sm"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-blue-500 flex-shrink-0" /> <span>Textes FB, Insta & WhatsApp</span></li>
+                    <li className="flex items-center gap-2 md:gap-3 text-sm"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-blue-500 flex-shrink-0" /> <span>Support WhatsApp</span></li>
                   </ul>
                   
                   {/* BOUTONS DE PAIEMENT - PRO */}
@@ -532,6 +536,9 @@ function App() {
                   <div className="mb-5 md:mb-6"><h3 className="text-lg md:text-xl font-bold text-yellow-500 mb-1.5 md:mb-2">Business</h3><div className="flex items-baseline gap-2"><span className="text-3xl md:text-4xl font-extrabold text-white">5 000</span><span className="text-sm md:text-base text-slate-400 font-medium">FCFA / mois</span></div><p className="text-xs md:text-sm text-slate-400 mt-2">Pour les agences et gros vendeurs.</p></div>
                   <ul className="space-y-3 md:space-y-4 mb-6 md:mb-8 flex-1">
                     <li className="flex items-center gap-2 md:gap-3 text-sm text-slate-200"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-yellow-500 flex-shrink-0" /> <span><b>100 crédits</b> mensuels</span></li>
+                    <li className="flex items-center gap-2 md:gap-3 text-sm text-slate-200"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-yellow-500 flex-shrink-0" /> <span>Génération en masse (Batch)</span></li>
+                    <li className="flex items-center gap-2 md:gap-3 text-sm text-slate-200"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-yellow-500 flex-shrink-0" /> <span>Textes FB, Insta & WhatsApp</span></li>
+                    <li className="flex items-center gap-2 md:gap-3 text-sm text-slate-200"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-yellow-500 flex-shrink-0" /> <span>Support WhatsAp prioritaire</span></li>
                     <li className="flex items-center gap-2 md:gap-3 text-sm text-slate-200"><CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-yellow-500 flex-shrink-0" /> <span>Priorité serveur</span></li>
                   </ul>
                   
