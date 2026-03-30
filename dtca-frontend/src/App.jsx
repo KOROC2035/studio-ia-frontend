@@ -44,7 +44,7 @@ function App() {
 
   const chargerProfil = async (id) => {
     try {
-      const response = await fetch(`https://studio-ia-backend.onrender.com/api/users/${id}/profil`);
+      const response = await fetch(`https://studio-ia-backend.onrender.com/api/users/${id}`);
       if (response.ok) {
         const data = await response.json();
         setUserInfo(data);
