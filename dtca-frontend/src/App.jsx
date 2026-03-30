@@ -12,25 +12,22 @@ function App() {
   // ==========================================
   // 🚪 LA PORTE DÉROBÉE DU CEO
   // ==========================================
-  // Si l'URL contient exactement ce chemin, on bloque l'app normale et on affiche le Dashboard
   if (window.location.pathname === '/admin-secret-ceo') {
     return <AdminDashboard />;
   }
 
   // --- LE RESTE DE TON APPLICATION ---
-  // 1. On vérifie la mémoire du navigateur au démarrage
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return localStorage.getItem('dtca_theme') === 'dark';
   });
 
-  // 2. À chaque changement, on met à jour le site ET la mémoire
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
-      localStorage.setItem('dtca_theme', 'dark'); // On sauvegarde "sombre"
+      localStorage.setItem('dtca_theme', 'dark'); 
     } else {
       document.documentElement.classList.remove('dark');
-      localStorage.setItem('dtca_theme', 'light'); // On sauvegarde "clair"
+      localStorage.setItem('dtca_theme', 'light'); 
     }
   }, [isDarkMode]);
 
@@ -108,26 +105,20 @@ function App() {
   const [historique, setHistorique] = useState([]);
   const [loadingHistorique, setLoadingHistorique] = useState(false);
 
-  // --- NOUVEAU : GESTION DES PAIEMENTS ---
   const [loadingPayment, setLoadingPayment] = useState(false);
 
   const declencherPaiement = async (fournisseur, montant) => {
     setLoadingPayment(true);
     try {
-      // Appel à ton vrai backend sur Render
       const response = await fetch(`https://studio-ia-backend.onrender.com/api/payments/${fournisseur}/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: montant,
-          user_id: userId
-        })
+        body: JSON.stringify({ amount: montant, user_id: userId })
       });
 
       const data = await response.json();
 
       if (response.ok && data.checkout_url) {
-        // Redirection vers la page de paiement (ou simulation)
         window.location.href = data.checkout_url;
       } else {
         alert(data.detail || data.message || "Erreur lors de l'initialisation du paiement.");
@@ -138,6 +129,17 @@ function App() {
     } finally {
       setLoadingPayment(false);
     }
+  };
+
+  // 🌟 NOUVEAU : Fonction Support WhatsApp pour le Web
+  const contacterSupportWeb = () => {
+    // Remplace ce numéro par le vrai (ex: 2250102030405)
+    const tonNumeroWhatsApp = "2250000000000"; 
+    const nom = userInfo?.full_name || "Un utilisateur";
+    const message = `Bonjour le support UpSell AdVision ! Je suis ${nom} et j'ai besoin d'aide sur la version Web.`;
+    // Redirection vers l'API universelle de WhatsApp (marche sur PC et Mobile)
+    const url = `https://wa.me/${tonNumeroWhatsApp}?text=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
   };
 
   const toggleReseau = (nomReseau) => setReseaux(prev => ({ ...prev, [nomReseau]: !prev[nomReseau] }));
@@ -180,7 +182,7 @@ function App() {
         throw new Error(data.detail || "Erreur");
       }
       setResult(data.resultats);
-      chargerProfil(userId); // Met à jour les crédits dans le header
+      chargerProfil(userId); 
     } catch (err) { setError(err.message); } finally { setLoading(false); }
   };
 
@@ -207,6 +209,16 @@ function App() {
       }
     }
     return cartes.length === 0 ? [{ reseau: 'Contenu Généré', contenu: texteBrut }] : cartes;
+  };
+
+  // 🌟 NOUVEAU : Fonction utilitaire pour lire proprement l'image (Base64 ou URL)
+  const renderImageSource = (imageUrl) => {
+    if (!imageUrl || imageUrl.length < 10) return null;
+    if (imageUrl.startsWith('http') || imageUrl.startsWith('data:image')) {
+      return imageUrl;
+    }
+    // Si c'est du Base64 brut renvoyé par Python, on ajoute l'entête
+    return `data:image/jpeg;base64,${imageUrl}`;
   };
 
   // ==========================================
@@ -308,10 +320,18 @@ function App() {
         )}
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+          
+          {/* 🌟 NOUVEAU : BOUTON SUPPORT WHATSAPP 🌟 */}
+          <button onClick={contacterSupportWeb} className="flex items-center justify-center p-2.5 md:px-4 md:py-2 bg-green-50 dark:bg-green-900/20 rounded-xl font-medium text-sm text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/40 transition border border-green-200 dark:border-green-800 mr-1">
+            <MessageCircle className="w-4 h-4 md:w-4 md:h-4" />
+            <span className="hidden md:inline ml-2">Support</span>
+          </button>
+
           <button onClick={() => setIsDarkMode(!isDarkMode)} className="flex items-center justify-center p-2.5 md:px-4 md:py-2 bg-slate-50 dark:bg-slate-900 rounded-xl font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition border border-slate-200 dark:border-slate-700">
             {isDarkMode ? <Sun className="w-4 h-4 md:w-4 md:h-4 text-amber-500" /> : <Moon className="w-4 h-4 md:w-4 md:h-4 text-indigo-500" />}
             <span className="hidden md:inline ml-2">{isDarkMode ? 'Clair' : 'Sombre'}</span>
           </button>
+          
           <button onClick={seDeconnecter} className="flex items-center justify-center p-2.5 md:px-4 md:py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-medium text-sm rounded-xl hover:bg-red-100 dark:hover:bg-red-900/40 transition border border-red-100 dark:border-red-900/30">
             <LogOut className="w-4 h-4 md:w-4 md:h-4" />
             <span className="hidden md:inline ml-2">Quitter</span>
@@ -341,13 +361,11 @@ function App() {
           </div>
         </header>
 
-        {/* CONTENEUR ANIMÉ : La key force l'animation à se rejouer à chaque changement d'onglet */}
         <div key={ongletActif} className="page-transition">
           
           {/* CONTENU : ONGLET CRÉER */}
           {ongletActif === 'creer' && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-              {/* Colonne Formulaire */}
               <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
                 <div className="flex justify-between items-center mb-5 md:mb-6">
                   <h2 className="text-lg md:text-xl font-bold">Nouveau Produit</h2>
@@ -399,7 +417,6 @@ function App() {
                 </form>
               </div>
 
-              {/* Colonne Résultat */}
               <div className="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col h-full min-h-[400px]">
                 <h2 className="text-lg md:text-xl font-bold mb-4 md:mb-6">Résultat Final</h2>
                 
@@ -409,8 +426,8 @@ function App() {
                 {result && !loading && (
                   <div className="space-y-5 md:space-y-6 page-transition">
                     <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-600 shadow-sm relative group">
-                      <img src={result.image_url} className="w-full h-auto object-cover" />
-                      <a href={result.image_url} download={`Studio_IA_${nomProduit.replace(/\s+/g, '_')}.jpg`} className="absolute bottom-2 right-2 md:bottom-3 md:right-3 bg-white/90 backdrop-blur-sm text-blue-600 font-bold px-3 py-1.5 md:px-3 md:py-2 rounded-lg flex items-center gap-1.5 md:gap-2 shadow-lg transition transform hover:scale-105 text-xs md:text-sm"><Download className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span className="hidden sm:inline">Télécharger</span></a>
+                      <img src={renderImageSource(result.image_url)} className="w-full h-auto object-cover" />
+                      <a href={renderImageSource(result.image_url)} download={`Studio_IA_${nomProduit.replace(/\s+/g, '_')}.jpg`} className="absolute bottom-2 right-2 md:bottom-3 md:right-3 bg-white/90 backdrop-blur-sm text-blue-600 font-bold px-3 py-1.5 md:px-3 md:py-2 rounded-lg flex items-center gap-1.5 md:gap-2 shadow-lg transition transform hover:scale-105 text-xs md:text-sm"><Download className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span className="hidden sm:inline">Télécharger</span></a>
                     </div>
                     <div className="space-y-3 md:space-y-4">
                       {extraireCartes(result.texte_whatsapp || result.texte_marketing || result.generated_copy).map((carte, index) => {
@@ -448,11 +465,20 @@ function App() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                   {historique.map((item) => (
                     <div key={item.id} className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm bg-slate-50 dark:bg-slate-900 flex flex-col">
-                      <div className="relative"><img src={item.generated_image_url} alt="Génération" className="w-full h-40 md:h-48 object-cover border-b border-slate-200 dark:border-slate-700" /></div>
+                      {/* 🌟 LA CORRECTION DE L'IMAGE EST ICI 🌟 */}
+                      <div className="relative">
+                        {renderImageSource(item.image_url) ? (
+                          <img src={renderImageSource(item.image_url)} alt="Génération" className="w-full h-40 md:h-48 object-cover border-b border-slate-200 dark:border-slate-700" />
+                        ) : (
+                           <div className="w-full h-40 md:h-48 bg-slate-100 dark:bg-slate-800 flex items-center justify-center border-b border-slate-200 dark:border-slate-700">
+                             <ImageIcon className="w-8 h-8 text-slate-300 dark:text-slate-600" />
+                           </div>
+                        )}
+                      </div>
                       <div className="p-3 md:p-4 flex-1 flex flex-col">
-                        <div className="flex justify-between items-start mb-2"><span className="text-[10px] md:text-xs font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-700 px-2 py-1 rounded uppercase">{item.product_category}</span><span className="text-[10px] md:text-xs text-slate-400">{new Date(item.created_at).toLocaleDateString('fr-FR')}</span></div>
-                        <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 line-clamp-3 mb-3 flex-1">{item.generated_copy}</p>
-                        <button onClick={() => copyToClipboard(item.generated_copy, item.id)} className="w-full flex justify-center gap-1.5 md:gap-2 text-xs md:text-sm bg-white dark:bg-slate-800 border dark:border-slate-600 py-1.5 md:py-2 rounded-lg font-medium text-slate-700 dark:text-slate-300">{copiedIndex === item.id ? <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-500" /> : <Copy className="w-3.5 h-3.5 md:w-4 md:h-4" />} Copier</button>
+                        <div className="flex justify-between items-start mb-2"><span className="text-[10px] md:text-xs font-bold bg-blue-100 dark:bg-blue-900/50 text-blue-700 px-2 py-1 rounded uppercase">{item.categorie || "Produit"}</span><span className="text-[10px] md:text-xs text-slate-400">{new Date(item.created_at).toLocaleDateString('fr-FR')}</span></div>
+                        <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 line-clamp-3 mb-3 flex-1">{item.nom_produit}</p>
+                        <button onClick={() => copyToClipboard(item.generated_copy, item.id)} className="w-full flex justify-center gap-1.5 md:gap-2 text-xs md:text-sm bg-white dark:bg-slate-800 border dark:border-slate-600 py-1.5 md:py-2 rounded-lg font-medium text-slate-700 dark:text-slate-300">{copiedIndex === item.id ? <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-green-500" /> : <Copy className="w-3.5 h-3.5 md:w-4 md:h-4" />} Copier le texte</button>
                       </div>
                     </div>
                   ))}
