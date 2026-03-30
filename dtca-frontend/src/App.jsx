@@ -97,7 +97,10 @@ function App() {
   const [categorie, setCategorie] = useState('Vêtements');
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [reseaux, setReseaux] = useState({ WhatsApp: true, Facebook: false, Instagram: false });
+  
+  // 🌟 MODIFICATION : Choix unique comme sur mobile (plus de cases à cocher)
+  const [reseau, setReseau] = useState('WhatsApp');
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
@@ -131,18 +134,13 @@ function App() {
     }
   };
 
-  // 🌟 NOUVEAU : Fonction Support WhatsApp pour le Web
   const contacterSupportWeb = () => {
-    // Remplace ce numéro par le vrai (ex: 2250102030405)
     const tonNumeroWhatsApp = "2250000000000"; 
     const nom = userInfo?.full_name || "Un utilisateur";
     const message = `Bonjour le support UpSell AdVision ! Je suis ${nom} et j'ai besoin d'aide sur la version Web.`;
-    // Redirection vers l'API universelle de WhatsApp (marche sur PC et Mobile)
     const url = `https://wa.me/${tonNumeroWhatsApp}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
   };
-
-  const toggleReseau = (nomReseau) => setReseaux(prev => ({ ...prev, [nomReseau]: !prev[nomReseau] }));
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -162,13 +160,17 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const reseauxSelectionnes = Object.keys(reseaux).filter(r => reseaux[r]).join(', ');
-    if (!reseauxSelectionnes) return setError("Sélectionnez au moins un réseau.");
 
     setLoading(true); setError(null); setResult(null);
     const formData = new FormData();
-    formData.append('user_id', userId); formData.append('nom_produit', nomProduit);
-    formData.append('categorie', categorie); formData.append('reseaux', reseauxSelectionnes); formData.append('image', image);
+    formData.append('user_id', userId); 
+    formData.append('nom_produit', nomProduit);
+    formData.append('categorie', categorie); 
+    
+    // 🌟 MODIFICATION : On envoie le réseau unique ou "Tous" au backend
+    formData.append('reseaux', reseau); 
+    
+    formData.append('image', image);
 
     try {
       const response = await fetch('https://studio-ia-backend.onrender.com/api/generer-visuel', { method: 'POST', body: formData });
@@ -211,13 +213,11 @@ function App() {
     return cartes.length === 0 ? [{ reseau: 'Contenu Généré', contenu: texteBrut }] : cartes;
   };
 
-  // 🌟 NOUVEAU : Fonction utilitaire pour lire proprement l'image (Base64 ou URL)
   const renderImageSource = (imageUrl) => {
     if (!imageUrl || imageUrl.length < 10) return null;
     if (imageUrl.startsWith('http') || imageUrl.startsWith('data:image')) {
       return imageUrl;
     }
-    // Si c'est du Base64 brut renvoyé par Python, on ajoute l'entête
     return `data:image/jpeg;base64,${imageUrl}`;
   };
 
@@ -321,7 +321,6 @@ function App() {
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
           
-          {/* 🌟 NOUVEAU : BOUTON SUPPORT WHATSAPP 🌟 */}
           <button onClick={contacterSupportWeb} className="flex items-center justify-center p-2.5 md:px-4 md:py-2 bg-green-50 dark:bg-green-900/20 rounded-xl font-medium text-sm text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/40 transition border border-green-200 dark:border-green-800 mr-1">
             <MessageCircle className="w-4 h-4 md:w-4 md:h-4" />
             <span className="hidden md:inline ml-2">Support</span>
@@ -390,9 +389,11 @@ function App() {
                   <div>
                     <label className="block text-sm font-medium mb-2 dark:text-slate-300">Optimiser le texte pour :</label>
                     <div className="flex gap-2 flex-wrap">
-                      <button type="button" onClick={() => toggleReseau('WhatsApp')} className={`flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg border-2 transition text-xs md:text-sm font-medium ${reseaux.WhatsApp ? 'border-green-500 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'border-slate-200 dark:border-slate-600 text-slate-500'}`}><MessageCircle className="w-3.5 h-3.5 md:w-4 md:h-4" /> WhatsApp</button>
-                      <button type="button" onClick={() => toggleReseau('Facebook')} className={`flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg border-2 transition text-xs md:text-sm font-medium ${reseaux.Facebook ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'border-slate-200 dark:border-slate-600 text-slate-500'}`}><Facebook className="w-3.5 h-3.5 md:w-4 md:h-4" /> Facebook</button>
-                      <button type="button" onClick={() => toggleReseau('Instagram')} className={`flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg border-2 transition text-xs md:text-sm font-medium ${reseaux.Instagram ? 'border-pink-500 bg-pink-50 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400' : 'border-slate-200 dark:border-slate-600 text-slate-500'}`}><Instagram className="w-3.5 h-3.5 md:w-4 md:h-4" /> Instagram</button>
+                      {/* 🌟 MODIFICATION : Boutons de sélection unique pour les réseaux 🌟 */}
+                      <button type="button" onClick={() => setReseau('WhatsApp')} className={`flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg border-2 transition text-xs md:text-sm font-medium ${reseau === 'WhatsApp' ? 'border-green-500 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'border-slate-200 dark:border-slate-600 text-slate-500'}`}><MessageCircle className="w-3.5 h-3.5 md:w-4 md:h-4" /> WhatsApp</button>
+                      <button type="button" onClick={() => setReseau('Facebook')} className={`flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg border-2 transition text-xs md:text-sm font-medium ${reseau === 'Facebook' ? 'border-blue-500 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400' : 'border-slate-200 dark:border-slate-600 text-slate-500'}`}><Facebook className="w-3.5 h-3.5 md:w-4 md:h-4" /> Facebook</button>
+                      <button type="button" onClick={() => setReseau('Instagram')} className={`flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg border-2 transition text-xs md:text-sm font-medium ${reseau === 'Instagram' ? 'border-pink-500 bg-pink-50 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400' : 'border-slate-200 dark:border-slate-600 text-slate-500'}`}><Instagram className="w-3.5 h-3.5 md:w-4 md:h-4" /> Instagram</button>
+                      <button type="button" onClick={() => setReseau('Tous')} className={`flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg border-2 transition text-xs md:text-sm font-medium ${reseau === 'Tous' ? 'border-purple-500 bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'border-slate-200 dark:border-slate-600 text-slate-500'}`}><LayoutGrid className="w-3.5 h-3.5 md:w-4 md:h-4" /> Tous</button>
                     </div>
                   </div>
 
@@ -405,7 +406,7 @@ function App() {
                   </div>
 
                   <button type="submit" disabled={loading || !image} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 md:py-3.5 px-4 rounded-xl transition disabled:bg-blue-300 dark:disabled:bg-blue-900 mt-4 md:mt-6 flex justify-center items-center gap-2 text-sm md:text-base">
-                    {loading ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> Magie en cours...</span> : <span className="flex items-center gap-2"><Sparkles className="w-4 h-4 md:w-5 md:h-5" /> Générer pour {Object.values(reseaux).filter(Boolean).length} réseau(x)</span>}
+                    {loading ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" /> Magie en cours...</span> : <span className="flex items-center gap-2"><Sparkles className="w-4 h-4 md:w-5 md:h-5" /> Générer le Marketing</span>}
                   </button>
                   
                   {error && error.toLowerCase().includes('crédit') ? (
@@ -465,7 +466,6 @@ function App() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                   {historique.map((item) => (
                     <div key={item.id} className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm bg-slate-50 dark:bg-slate-900 flex flex-col">
-                      {/* 🌟 LA CORRECTION DE L'IMAGE EST ICI 🌟 */}
                       <div className="relative">
                         {renderImageSource(item.image_url) ? (
                           <img src={renderImageSource(item.image_url)} alt="Génération" className="w-full h-40 md:h-48 object-cover border-b border-slate-200 dark:border-slate-700" />
